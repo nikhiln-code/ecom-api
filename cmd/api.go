@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/nikhiln-code/ecom-api/internal/products"
 )
 
 //run -> graceful shiutdown -> cleanup
@@ -25,10 +26,15 @@ func (app *application) mount() http.Handler {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 
-
+	/** Routes */
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("all good"))	
 	})
+
+	// TODO: Initialize products service with database connection
+	productsService := products.NewService()
+	productsHandler := products.NewHandler(productsService)
+	r.Get("/products", productsHandler.ListProducts)
 
 	return r
 }

@@ -1,0 +1,25 @@
+# ======================
+# Go binaries & builds
+# ======================
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output directories
+/bin/
+/build/
+/dist/
+
+# Go test binaries
+*.test
+
+# Go coverage
+*.out
+coverage/
+
+# ======================
+# Go modules
+# ======================
+# Uncomment if you want to ignore vendor (usually NOT recomme

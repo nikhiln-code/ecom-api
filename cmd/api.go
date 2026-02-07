@@ -1,18 +1,13 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
-type application struct {
-	config config
-	//logger
-	//db driver
-
-}
 
 //run -> graceful shiutdown -> cleanup
 func (app *application) mount() http.Handler {
@@ -31,15 +26,38 @@ func (app *application) mount() http.Handler {
 
 
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello world"))	
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("all good"))	
 	})
 
-	http.ListenAndServe(app.config.addr, r)
 	return r
 }
 
-//mount
+// run 
+func (app *application) run(h http.Handler) error {
+	svr := &http.Server{
+		Addr: app.config.addr,
+		Handler: h,
+		WriteTimeout: time.Second *30,
+		ReadTimeout: time.Second * 10,
+		IdleTimeout: time.Minute,
+	}
+	
+	log.Printf("server has started on %s", app.config.addr)
+	err := http.ListenAndServe(svr.Addr, svr.Handler)
+	return err;
+	
+}
+
+
+
+type application struct {
+	config config
+	//logger
+	//db driver
+
+}
+
 type config struct {
 	addr string
 	db dbConfig

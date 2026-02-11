@@ -55,8 +55,6 @@ func (app *application) run(h http.Handler) error {
 	
 }
 
-
-
 type application struct {
 	config config
 	//logger
